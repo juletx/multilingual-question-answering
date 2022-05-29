@@ -1,4 +1,4 @@
-"""TODO(xquad): Add a description here."""
+"""XQuAD: Cross-lingual Question Answering Dataset."""
 
 
 import json
@@ -25,10 +25,15 @@ performance. The dataset consists of a subset of 240 paragraphs and 1190 questio
 of SQuAD v1.1 (Rajpurkar et al., 2016) together with their professional translations into ten languages: Spanish, German,
 Greek, Russian, Turkish, Arabic, Vietnamese, Thai, Chinese, Hindi and Romanian. Consequently, the dataset is entirely parallel
 across 12 languages.
+We also include "translate-train", "translate-dev", and "translate-test" \
+splits for each non-English language from XTREME (Hu et al., 2020). These can \
+be used to run XQuAD in the "translate-train" or "translate-test" settings.
 """
 
-_URL = "https://github.com/deepmind/xquad/raw/master/"
 _LANG = ["ar", "de", "zh", "vi", "en", "es", "hi", "el", "th", "tr", "ru", "ro"]
+_URL_FORMAT = "https://github.com/deepmind/xquad/raw/master/xquad.{lang}.json"
+_XTREME_SQUAD_URL_FORMAT = "https://storage.googleapis.com/xtreme_translations/SQuAD/translate-{split}/squad.translate.{split}.en-{lang}.json"
+_XTREME_XQUAD_URL_FORMAT = "https://storage.googleapis.com/xtreme_translations/XQuAD/translate-test/xquad.translate.test.{lang}-en.json"
 
 
 class XquadConfig(datasets.BuilderConfig):
@@ -47,11 +52,26 @@ class XquadConfig(datasets.BuilderConfig):
 
 
 class Xquad(datasets.GeneratorBasedBuilder):
-    """TODO(xquad): Short description of my dataset."""
+    """XQuAD: Cross-lingual Question Answering Dataset."""
 
     # TODO(xquad): Set up version.
     VERSION = datasets.Version("1.0.0")
-    BUILDER_CONFIGS = [XquadConfig(name=f"xquad.{lang}", description=_DESCRIPTION, lang=lang) for lang in _LANG]
+
+    BUILDER_CONFIGS = [
+        XquadConfig(
+            name=lang,
+            lang=lang,
+            description=f"XQuAD '{lang}' test split, with machine-translated "
+                        "translate-train/translate-dev/translate-test splits "
+                        "from XTREME (Hu et al., 2020).",
+        ) for lang in _LANG if lang not in ["en", "ro"]
+    ] + [
+        XquadConfig(
+            name=lang,
+            lang=lang,
+            description=f"XQuAD '{lang}' test split.",
+        ) for lang in ["en", "ro"]
+    ]
 
     def _info(self):
         # TODO(xquad): Specifies the datasets.DatasetInfo object
@@ -92,15 +112,30 @@ class Xquad(datasets.GeneratorBasedBuilder):
         # TODO(xquad): Downloads the data and defines the splits
         # dl_manager is a datasets.download.DownloadManager that can be used to
         # download and extract URLs
-        urls_to_download = {lang: _URL + f"xquad.{lang}.json" for lang in _LANG}
-        downloaded_files = dl_manager.download_and_extract(urls_to_download)
+        lang = self.config.lang
+
+        if lang in ["en", "ro"]:
+            filepaths = dl_manager.download_and_extract({
+                "test": _URL_FORMAT.format(lang=lang),
+            })
+        else:
+            filepaths = dl_manager.download_and_extract({
+                "test":
+                    _URL_FORMAT.format(lang=lang),
+                "translate_train":
+                    _XTREME_SQUAD_URL_FORMAT.format(split="train", lang=lang),
+                "translate_dev":
+                    _XTREME_SQUAD_URL_FORMAT.format(split="dev", lang=lang),
+                "translate_test":
+                    _XTREME_XQUAD_URL_FORMAT.format(lang=lang),
+            })
 
         return [
             datasets.SplitGenerator(
-                name=datasets.Split.VALIDATION,
+                name=split,
                 # These kwargs will be passed to _generate_examples
-                gen_kwargs={"filepath": downloaded_files[self.config.lang]},
-            ),
+                gen_kwargs={"filepath": path},
+            ) for split, path in filepaths.items()
         ]
 
     def _generate_examples(self, filepath):
