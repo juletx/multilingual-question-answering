@@ -1,4 +1,4 @@
-# Zero-Shot and Translation Experiments on XQuAD with mBERT
+# Zero-Shot and Translation Experiments on XQuAD and MLQA
 
 ## [XQuAD-XTREME Dataset](https://huggingface.co/datasets/juletxara/xquad_xtreme)
 
