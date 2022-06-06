@@ -1,0 +1,8 @@
+,lang,F1_Translate-test RoBERTa Large,EM_Translate-test RoBERTa Large
+0,translate-test.ar,53.68,29.45
+1,translate-test.de,57.43,37.95
+2,translate-test.vi,56.32,34.87
+3,translate-test.zh,50.58,27.74
+4,translate-test.es,67.96,45.86
+5,translate-test.hi,55.66,33.9
+6,avg,56.94,34.96

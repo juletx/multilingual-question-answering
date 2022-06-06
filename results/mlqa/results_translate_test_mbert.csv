@@ -1,0 +1,8 @@
+,lang,F1_Translate-test mBERT,EM_Translate-test mBERT
+0,translate-test.ar,49.48,26.99
+1,translate-test.de,53.61,34.82
+2,translate-test.vi,53.43,32.01
+3,translate-test.zh,45.93,24.49
+4,translate-test.es,64.28,43.02
+5,translate-test.hi,51.89,31.23
+6,avg,53.1,32.1

@@ -1,0 +1,8 @@
+,lang,F1_Translate-test RoBERTa,EM_Translate-test RoBERTa
+0,translate-test.ar,51.38,27.63
+1,translate-test.de,54.13,34.09
+2,translate-test.vi,54.03,32.39
+3,translate-test.zh,47.65,25.23
+4,translate-test.es,66.02,43.44
+5,translate-test.hi,52.34,30.99
+6,avg,54.26,32.3

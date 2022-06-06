@@ -1,0 +1,8 @@
+,lang,F1_Translate-test BERT Large,EM_Translate-test BERT Large
+0,translate-test.ar,52.66,28.92
+1,translate-test.de,56.68,37.15
+2,translate-test.vi,56.72,34.74
+3,translate-test.zh,50.13,27.8
+4,translate-test.es,67.15,45.19
+5,translate-test.hi,55.2,33.81
+6,avg,56.42,34.6
