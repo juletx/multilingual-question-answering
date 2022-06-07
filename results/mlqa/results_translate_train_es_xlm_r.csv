@@ -1,0 +1,9 @@
+,lang,F1_Translate-train es XLM-R,EM_Translate-train es XLM-R
+0,ar.ar,54.06,34.06
+1,de.de,61.44,44.94
+2,vi.vi,66.24,44.95
+3,zh.zh,36.16,35.43
+4,en.en,77.2,61.48
+5,es.es,67.96,44.85
+6,hi.hi,60.25,40.67
+7,avg,60.47,43.77
