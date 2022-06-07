@@ -25,6 +25,11 @@
 % and will typically save some space.
 \usepackage{microtype}
 
+% Custom packages
+\usepackage{booktabs}
+\usepackage{pdflscape}
+\usepackage{adjustbox}
+
 % If the title and author information does not fit in the area allocated, uncomment the following
 %
 %\setlength\titlebox{<dim>}
@@ -63,23 +68,111 @@
 
 \section{Introduction}
 
+In this project we performed some zero-shot and translation experiments on Multilingual Question Answering. The objective is to compare the results of zero shot, translation test and translation test on different datasets, with different models. The datasets we used are XQuAD and MLQA, and the models are monolingual or multilingual:
+
+\begin{itemize}
+    \item Monolingual models: 
+    \begin{enumerate}
+        \item BERT (110M)
+        \item BERT-large (340M)
+        \item RoBERTa
+        \item RoBERTa-large
+    \end{enumerate}
+    \item Multilingual models
+    \begin{enumerate}
+        \item mBERT (110M)
+        \item XLM-R
+        \item XLM-R-large
+    \end{enumerate}
+\end{itemize}
+
+Most of the models we used are already pretrained and available on Huggingface.
+
+
 \section{Related Work}
 
 \section{Data}
 
 \subsection{XQuAD}
 
-\cite{Artetxe:etal:2019}
+XQuAD is a multilingual Question Answering dataset \cite{Artetxe:etal:2019}. It is composed of 240 paraghaps and 1190 question-answer pair from SQuAD v1.1 \footnote{\url{https://huggingface.co/datasets/squad}}. SQuAD is based on a set of Wikipedia articles, and professional translations into 11 languages were added in XQuAD (Spanish, German, Greek, Russian, Turkish, Arabic, Vietnamese, Thai, Chinese, Hindi and Romanian). We also used XTREME \cite{XTREME} for automatically translated translate-train and translate-test data.
+As the dataset is based on SQuAD v1.1, there are no unanswerable questions in the data. We chose this setting so that models can focus on cross-lingual transfer.
+
+The dataset can be found in HuggingFace. \footnote{\url{https://huggingface.co/datasets/juletxara/xquad_xtreme}}
 
 \subsection{MLQA}
 
-\cite{lewis2019mlqa}
+MLQA \cite{lewis2019mlqa} has 5K extractive question-answering instances (12K in English) in seven languages (English, Arabic, German, Spanish, Hindi, Vietnamese and Simplified Chinese)
+
+The dataset can be found in HuggingFace: \footnote{\url{https://huggingface.co/datasets/mlqa}}
+
+
 
 \section{Methods}
+
+
+\subsection{Zero-shot}
+
+\subsection{Translate Train}
+
+\subsection{Translate Test}
+
+All the code can be found on GitHub \footnote{\url{https://github.com/juletx/XQuAD-MLQA}}
 
 \section{Results}
 
 \subsection{XQuAD}
+
+%\begin{landscape}
+
+\begin{table}[!ht]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{l|cccccccccccc|c}
+        \toprule
+        Model F1 / EM & en & ar & de & el & es & hi & ru & th & tr & vi & zh & ro & avg \\
+        \midrule
+        \multicolumn{14}{l}{Zero-shot} \\
+        \midrule
+        mBERT & 85.0 / 73.5 & 57.8 / 42.2 & 72.6 / 55.9 & 62.2 / 45.2 & 76.4 / 58.1 & 55.3 / 40.6 & 71.3 / 54.7 & 35.1 / 26.3 & 51.1 / 34.9 & 68.1 / 47.9 & 58.2 / 47.3 & 72.4 / 59.5 & 63.8 / 48.8 \\
+        XLM-R & 84.4 / 73.8 & 67.9 / 52.1 & 75.3 / 59.8 & 74.3 / 57.0 & 77.0 / 59.2 & 69.0 / 52.5 & 75.1 / 58.6 & 68.0 / 56.4 & 68.0 / 51.8 & 73.6 / 54.5 & 65.0 / 55.0 & 80.0 / 66.3 & 73.1 / 58.1 \\
+        XLM-R Large &\textbf{86.5 / 75.9}&\textbf{75.0 / 58.0}&\textbf{79.9 / 63.8}&\textbf{79.1 / 61.3}&\textbf{81.0 / 62.7}&\textbf{76.0 / 60.8}&\textbf{80.3 / 63.1}&\textbf{72.8 / 61.7}&\textbf{74.1 / 58.3}&\textbf{79.0 / 59.3}&\textbf{66.8 / 58.0}&\textbf{83.5 / 70.2}&\textbf{77.8 / 62.8}\\
+        \midrule
+        \multicolumn{14}{l}{Translate-test monolingual} \\
+        \midrule
+        BERT & ~ & 69.4 / 55.0 & 75.7 / 62.7 & 75.0 / 60.6 & 77.2 / 62.6 & 69.7 / 53.7 & 74.9 / 60.5 & 60.5 / 46.5 & 59.9 / 41.8 & 72.2 / 58.3 & 69.9 / 56.0 & ~ & 70.4 / 55.8 \\
+        BERT Large & ~ & 73.6 / 59.1 & 80.4 / 66.4 & 80.2 / 66.8 & 81.9 / 68.7 &\textbf{75.3 / 61.7}& 80.1 / 67.0 &\textbf{67.5 / 53.9}&\textbf{66.3 / 47.3}&\textbf{76.4 / 62.1}& 74.0 / 59.5 & ~ & 75.6 / 61.2 \\
+        RoBERTa & ~ & 71.6 / 57.0 & 77.0 / 62.4 & 76.8 / 63.9 & 80.0 / 64.6 & 72.0 / 55.6 & 77.2 / 62.4 & 62.2 / 46.6 & 63.4 / 44.1 & 72.4 / 56.6 & 72.4 / 57.9 & ~ & 72.5 / 57.1 \\
+        RoBERTa Large & ~ &\textbf{74.8 / 61.1}&\textbf{80.4 / 67.1}&\textbf{80.8 / 68.0}&\textbf{83.1 / 69.4}& 75.1 / 61.0 &\textbf{81.2 / 68.0}& 65.3 / 51.0 & 66.0 / 46.9 & 76.4 / 62.0 &\textbf{74.0 / 59.9}& ~ &\textbf{75.7 / 61.4}\\
+        \midrule
+        \multicolumn{14}{l}{Translate-test multilingual} \\
+        \midrule
+        mBERT & ~ & 70.4 / 55.8 & 76.7 / 63.3 & 76.0 / 61.9 & 78.7 / 65.1 & 70.6 / 55.8 & 76.6 / 63.1 & 60.0 / 45.9 & 61.6 / 42.7 & 70.6 / 55.6 & 70.1 / 56.6 & ~ & 71.2 / 56.6 \\
+        XLM-R & ~ & 70.4 / 56.5 & 79.0 / 65.8 & 77.8 / 65.0 & 79.3 / 66.4 & 72.4 / 57.6 & 77.4 / 63.6 & 60.3 / 45.4 & 63.4 / 44.3 & 73.0 / 58.4 & 71.1 / 57.4 & ~ & 72.4 / 58.0 \\
+        XLM-R Large & ~ &\textbf{72.9 / 59.1}&\textbf{80.1 / 66.6}&\textbf{79.6 / 66.2}&\textbf{81.5 / 67.1}&\textbf{74.2 / 60.1}&\textbf{79.7 / 65.7}&\textbf{61.7 / 46.0}&\textbf{66.2 / 48.2}&\textbf{75.1 / 61.5}&\textbf{73.6 / 58.8}& ~ &\textbf{74.5 / 59.9}\\
+        \midrule
+        \multicolumn{14}{l}{Translate-train} \\
+        \midrule
+        XLM-R-es &\textbf{80.4} / 66.1 &\textbf{67.0} / 47.9 & 74.2 / 56.4 &\textbf{73.5}/ 52.4 &\textbf{76.3} / 56.6 &\textbf{66.9}/ 48.2 & 72.4 / 54.2 &\textbf{68.7} / \textbf{58.5} & \textbf{66.2} / 46.5 & 73.2 / 52.0 & 63.4 / 50.3 &\textbf{76.0} / 59.2 &\textbf{71.5} / 54.0 \\
+        XLM-R-de & 79.8 / \textbf{67.1}& 65.9 / \textbf{48.2}&\textbf{74.3} / \textbf{58.8}& 72.3 / \textbf{54.4}& 75.9 / \textbf{57.9}& 66.4 / \textbf{50.6}&\textbf{73.1} / \textbf{56.4}& 65.4 / 56.8 & 65.8 / \textbf{50.8}& 72.7 / \textbf{53.2}& \textbf{64.7} / \textbf{55.0}& 75.3 / \textbf{61.1}& 71.0 / \textbf{55.9}\\
+        \midrule
+        \multicolumn{14}{l}{Fine-tuning XQuAD} \\
+        \midrule
+        mBERT & 97.3 / 95.3 & 90.0 / 84.3 & 94.2 / 90.0 & 92.2 / 87.0 & 96.2 / 92.4 & 88.2 / 77.5 & 94.4 / 90.1 & 25.2 / 16.8 & 89.9 / 84.4 & 93.4 / 87.6 & 87.5 / 84.4 & 95.5 / 91.3 & 87.0 / 81.8 \\
+        XLM-R & 98.5 / 97.5 & 92.5 / 88.2 & 95.1 / 91.8 & 96.0 / 91.8 & 97.8 / 93.6 & 92.6 / 88.6 & 95.2 / 90.8 & 94.0 / 92.4 & 92.0 / 87.3 & 95.5 / 91.3 & 94.0 / 92.9 & 97.7 / 94.8 & 95.1 / 91.8 \\
+        XLM-R Large &\textbf{99.7 / 99.2}&\textbf{97.0 / 94.2}&\textbf{98.1 / 95.6}&\textbf{97.8 / 94.4}&\textbf{98.5 / 95.8}&\textbf{96.5 / 93.6}&\textbf{98.1 / 96.0}&\textbf{96.1 / 95.1}&\textbf{95.9 / 92.3}&\textbf{97.6 / 94.0}&\textbf{96.3 / 95.7}&\textbf{98.9 / 97.1}&\textbf{97.5 / 95.2}\\
+        \midrule
+        \multicolumn{14}{l}{Data-augmentation XQuAD} \\
+        \midrule
+        mBERT & 99.7 / 99.2 & 97.1 / 94.4 & 98.9 / 97.9 & 97.0 / 94.6 & 99.6 / 98.9 & 97.7 / 95.1 & 98.5 / 97.3 & 87.3 / 84.9 & 98.8 / 97.4 & 98.9 / 97.5 & 97.5 / 96.8 & 90.6 / 81.6 & 96.8 / 94.6 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+    \centering
+    \caption{XQuAD results (F1/EM) for each language.}
+\end{table}
+
+%\end{landscape}
 
 \subsection{MLQA}
 
