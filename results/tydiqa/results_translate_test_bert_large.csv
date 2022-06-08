@@ -1,0 +1,10 @@
+,lang,F1_Translate-test BERT Large,EM_Translate-test BERT Large
+0,ar,69.79,52.2
+1,bn,79.0,64.09
+2,fi,76.76,64.18
+3,id,75.95,62.38
+4,ko,73.75,63.5
+5,ru,75.27,60.13
+6,sw,80.89,69.76
+7,te,79.69,66.17
+8,avg,76.39,62.8

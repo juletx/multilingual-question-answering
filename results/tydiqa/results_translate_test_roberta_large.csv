@@ -1,0 +1,10 @@
+,lang,F1_Translate-test RoBERTa Large,EM_Translate-test RoBERTa Large
+0,ar,66.91,48.12
+1,bn,78.06,62.98
+2,fi,75.36,60.65
+3,id,72.99,56.76
+4,ko,73.19,61.56
+5,ru,74.34,58.11
+6,sw,80.18,69.63
+7,te,77.96,63.17
+8,avg,74.88,60.12
