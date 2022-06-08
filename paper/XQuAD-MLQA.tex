@@ -27,7 +27,6 @@
 
 % Custom packages
 \usepackage{booktabs}
-\usepackage{pdflscape}
 \usepackage{adjustbox}
 
 % If the title and author information does not fit in the area allocated, uncomment the following
@@ -36,7 +35,7 @@
 %
 % and set <dim> to something 5cm or larger.
 
-\title{Zero-Shot and Translation Experiments on XQuAD and MLQA}
+\title{Zero-Shot and Translation Experiments on XQuAD, MLQA and TyDiQA}
 
 % Author information can be set in various styles:
 % For several authors from the same institution:
@@ -59,7 +58,7 @@
   \texttt{jetxaniz007@ikasle.ehu.eus} \\\And
   Oihane Cantero \\
   UPV/EHU \\
-  \texttt{ocantero003@ikasle.ehu.eus} \\}
+  \texttt{ocantero003@ikasle.ehu.eus}}
 
 \begin{document}
 \maketitle
@@ -68,7 +67,7 @@
 
 \section{Introduction}
 
-In this project we performed some zero-shot and translation experiments on Multilingual Question Answering. The objective is to compare the results of zero shot, translation test and translation test on different datasets, with different models. The datasets we used are XQuAD and MLQA, and the models are monolingual or multilingual:
+In this project we performed some zero-shot and translation experiments on Multilingual Question Answering. The objective is to compare the results of zero shot, translation test and translation test on different datasets, with different models. The datasets we used are XQuAD, MLQA and TyDiQA, and the models are monolingual or multilingual:
 
 \begin{itemize}
     \item Monolingual models: 
@@ -86,8 +85,7 @@ In this project we performed some zero-shot and translation experiments on Multi
     \end{enumerate}
 \end{itemize}
 
-Most of the models we used are already pretrained and available on Huggingface.
-
+Most of the models we used are already fine-tuned and available on Huggingface.
 
 \section{Related Work}
 
@@ -95,37 +93,52 @@ Most of the models we used are already pretrained and available on Huggingface.
 
 \subsection{XQuAD}
 
-XQuAD is a multilingual Question Answering dataset \cite{Artetxe:etal:2019}. It is composed of 240 paraghaps and 1190 question-answer pair from SQuAD v1.1 \footnote{\url{https://huggingface.co/datasets/squad}}. SQuAD is based on a set of Wikipedia articles, and professional translations into 11 languages were added in XQuAD (Spanish, German, Greek, Russian, Turkish, Arabic, Vietnamese, Thai, Chinese, Hindi and Romanian). We also used XTREME \cite{XTREME} for automatically translated translate-train and translate-test data.
-As the dataset is based on SQuAD v1.1, there are no unanswerable questions in the data. We chose this setting so that models can focus on cross-lingual transfer.
+XQuAD is a multilingual Question Answering dataset \cite{Artetxe:etal:2019}. It is composed of 240 paraghaps and 1190 question-answer pair from SQuAD v1.1\footnote{\url{https://huggingface.co/datasets/squad}}. SQuAD is based on a set of Wikipedia articles. Professional translations into 11 languages were added in XQuAD (Spanish, German, Greek, Russian, Turkish, Arabic, Vietnamese, Thai, Chinese, Hindi and Romanian). As the dataset is based on SQuAD v1.1, there are no unanswerable questions in the data. 
 
-The dataset can be found in HuggingFace. \footnote{\url{https://huggingface.co/datasets/juletxara/xquad_xtreme}}
+We also used XTREME \cite{XTREME} for automatically translated translate-train and translate-test data. The dataset can be found in HuggingFace \footnote{\url{https://huggingface.co/datasets/juletxara/xquad_xtreme}}.
 
 \subsection{MLQA}
 
-MLQA \cite{lewis2019mlqa} has 5K extractive question-answering instances (12K in English) in seven languages (English, Arabic, German, Spanish, Hindi, Vietnamese and Simplified Chinese)
+MLQA \cite{lewis2019mlqa} is another multilingual question answering evaluation benchmark. It has 5K extractive question-answering instances (12K in English) in seven languages (English, Arabic, German, Spanish, Hindi, Vietnamese and Simplified Chinese). It is also based on Wikipedia articles, and the questions has been translated by professional translators, while he answers are directly taken form the different languages of the given Wikipedia article, to get parallel sentences.
 
-The dataset can be found in HuggingFace: \footnote{\url{https://huggingface.co/datasets/mlqa}}
+We also used XTREME \cite{XTREME} for automatically translated translate-train and translate-test data. The dataset can be found in HuggingFace \footnote{\url{https://huggingface.co/datasets/mlqa}}.
 
+\subsection{TyDiQA}
 
+TyDi QA is a question answering dataset covering 11 typologically diverse languages with 204K question-answer pairs \cite{tydiqa}. The languages of TyDi QA are diverse with regard to their typology -- the set of linguistic features that each language expresses -- such that we expect models performing well on this set to generalize across a large number of the languages in the world. It contains language phenomena that would not be found in English-only corpora. To provide a realistic information-seeking task and avoid priming effects, questions are written by people who want to know the answer, but don’t know the answer yet, (unlike SQuAD and its descendents) and the data is collected directly in each language without the use of translation (unlike MLQA and XQuAD).
+
+We also used XTREME \cite{XTREME} for automatically translated translate-train and translate-test data. The dataset can be found in HuggingFace \footnote{\url{https://huggingface.co/datasets/juletxara/tydiqa_xtreme}}.
 
 \section{Methods}
 
+All the code can be found on GitHub \footnote{\url{https://github.com/juletx/XQuAD-MLQA}}
 
 \subsection{Zero-shot}
 
+
 \subsection{Translate Train}
 
-\subsection{Translate Test}
+\subsection{Translate Test Monolingual}
 
-All the code can be found on GitHub \footnote{\url{https://github.com/juletx/XQuAD-MLQA}}
+\subsection{Translate Test Multilingual}
+
+\subsection{Fine tuning}
+
+\subsection{Data augmentation}
 
 \section{Results}
 
 \subsection{XQuAD}
 
-%\begin{landscape}
+The results are obtained with XQuAD dataset are in Table \ref{XQuAD_results}. They are quite similar to those form the baseline and these are some conclusions we got.
 
-\begin{table}[!ht]
+We can see that zero-shot is better than translate-test for larger models and worse for smaller models. So we can deduce that larger models have more adaptability to unseen languages than smaller ones. Monolingual models get better results that multilingual ones translate-test, and as we might expect, larger models give better results than smaller ones.
+
+Overall, the results from worst to better have been: Translate-train, Translate-test multilingual, monolingual, zero-shot, data augmentation and fine-tuning. The comparison of the results with fine tuning and data augmentation is not very pertinent because the fine tuning has been done with a part of the testing data. As we don't know which part has been used to fine tune the models, we couldn't remove them from the testing data.
+
+The best languages have been English, Spanish, Romanian and Russian and the worst ones have been Chinese, Hindi, Thai and Turkish, with some very bad results, as for example, 25.2 F1 score and 16.8 EM for fine tuned mBERT in Thai. This could be because these four languages are are not in Latin script, and because Thai is not supported by mBERT.
+
+\begin{table*}[!ht]
     \centering
     \begin{adjustbox}{max width=\textwidth}
     \begin{tabular}{l|cccccccccccc|c}
@@ -170,11 +183,129 @@ All the code can be found on GitHub \footnote{\url{https://github.com/juletx/XQu
     \end{adjustbox}
     \centering
     \caption{XQuAD results (F1/EM) for each language.}
-\end{table}
-
-%\end{landscape}
+    \label{XQuAD_results}
+\end{table*}
 
 \subsection{MLQA}
+
+In the MLQA dataset also, we get higher results with the biggest models. The language that obtains the best score is English. It is not unexpected because the dataset has much more data in English than in the other languages.
+
+\begin{table*}[!ht]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{l|ccccccc|c}
+        \toprule
+        Model F1 / EM & en & es & de & ar & hi & vi & zh & avg \\
+        \midrule
+        \multicolumn{9}{l}{Zero-shot} \\
+        \midrule
+        mBERT & 80.3 / 67.0 & 64.9 / 43.6 & 59.4 / 43.8 & 44.9 / 28.0 & 46.2 / 30.0 & 58.8 / 39.6 & 37.4 / 36.8 & 56.0 / 41.3 \\
+        XLM-R & 80.8 / 68.0 & 66.5 / 46.1 & 62.2 / 46.7 & 54.6 / 36.0 & 61.4 / 44.2 & 67.2 / 46.3 & 40.0 / 39.3 & 61.8 / 46.7 \\
+        XLM-R Large & \textbf{84.0} / \textbf{71.2} & \textbf{72.1} / \textbf{50.2} & \textbf{68.5} / \textbf{52.4} & \textbf{62.0} / \textbf{42.1} & \textbf{69.8} / \textbf{51.3} & \textbf{73.1} / \textbf{51.8} & \textbf{45.7} / \textbf{45.1} & \textbf{67.9} / \textbf{52.0} \\
+        \midrule
+        \multicolumn{9}{l}{Translate-test monolingual} \\
+        \midrule
+        BERT & ~ & 65.0 / 43.2 & 54.4 / 35.7 & 51.0 / 27.7 & 52.8 / 32.0 & 53.6 / 32.1 & 47.8 / 26.6 & 54.1 / 32.9 \\
+        BERT Large & ~ & 67.2 / 45.2 & 56.7 / 37.2 & 52.7 / 28.9 & 55.2 / 33.8 & \textbf{56.7} / 34.7 & 50.1 / \textbf{27.8} & 56.4 / 34.6 \\
+        RoBERTa & ~ & 66.0 / 43.4 & 54.1 / 34.1 & 51.4 / 27.6 & 52.3 / 31.0 & 54.0 / 32.4 & 47.6 / 25.2 & 54.3 / 32.3 \\
+        RoBERTa Large & ~ &\textbf{68.0} /\textbf{45.9} & \textbf{57.4} / \textbf{38.0} & \textbf{53.7} / \textbf{29.4} & \textbf{55.7} / \textbf{33.9} & 56.3 / \textbf{34.9} & \textbf{50.6} / 27.7 & \textbf{56.9} / \textbf{35.0}\\
+        \midrule
+        \multicolumn{9}{l}{Translate-test multilingual} \\
+        \midrule
+        mBERT & ~ & 64.3 / 43.0 & 53.6 / 34.8 & 49.5 / 27.0 & 51.9 / 31.2 & 53.4 / 32.0 & 45.9 / 24.5 & 53.1 / 32.1 \\
+        XLM-R & ~ &64.8 / 43.0 & 53.6 / 34.9 & 50.4 / 27.7 & 52.8 / 32.0 & 54.2 / 33.4 & 47.7 / 26.1 & 53.9 / 32.9 \\
+        XLM-R Large & ~ & \textbf{68.6} / \textbf{46.5} & \textbf{56.6} / \textbf{37.4} & \textbf{53.1} / \textbf{29.2} & \textbf{55.6} / \textbf{34.5} & \textbf{56.6}/ \textbf{34.5} & \textbf{50.0} / \textbf{27.6} & \textbf{56.7} / \textbf{35.0} \\
+        \midrule
+        \multicolumn{9}{l}{Translate-train} \\
+        \midrule
+        XLM-R-es &77.2 / 61.5 & \textbf{68.0} / 44.8 & 61.4 / 44.9 & \textbf{54.1} / 34.1 & \textbf{60.2} / 40.7 & \textbf{66.2} / 45.0 & 36.2 / 35.4 & \textbf{60.5} / 43.8 \\
+        XLM-R-de & \textbf{77.3} / \textbf{63.6} & 65.6 / \textbf{45.0} & \textbf{62.4} / \textbf{46.7} & 53.6 / \textbf{35.6} & 60.1 / \textbf{43.8} & 65.0 / \textbf{45.2} & \textbf{38.1} / \textbf{37.4} & 60.3 / \textbf{45.3}\\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+    \centering
+    \caption{MLQA results (F1/EM) for each language.}
+    \label{MLQA_results}
+\end{table*}
+
+\subsection{MLQA Zero-Shot}
+
+mbert
+
+\begin{table*}[!ht]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{l|ccccccc|c}
+    \toprule
+        c/q & en & es & de & ar & hi & vi & zh & avg \\ \midrule
+        en & 80.3 / 67.0 & 67.4 / 52.8 & 66.4 / 52.5 & 44.1 / 31.1 & 39.3 / 26.3 & 53.7 / 39.1 & 55.8 / 41.4 & 58.1 / 44.3 \\
+        es & 66.9 / 46.4 & 64.9 / 43.6 & 60.6 / 40.2 & 43.1 / 26.0 & 36.2 / 20.1 & 48.5 / 31.4 & 49.9 / 30.6 & 52.9 / 34.0 \\ 
+        de & 62.4 / 46.7 & 56.4 / 41.0 & 59.4 / 43.8 & 36.8 / 23.6 & 34.0 / 21.5 & 43.6 / 29.6 & 46.5 / 30.7 & 48.4 / 33.8 \\ 
+        ar & 51.1 / 33.7 & 45.4 / 28.7 & 46.3 / 30.5 & 44.9 / 28.0 & 30.8 / 17.3 & 35.9 / 20.1 & 36.8 / 21.3 & 41.6 / 25.7 \\ 
+        hi & 52.9 / 37.1 & 43.7 / 29.1 & 47.6 / 33.8 & 34.5 / 21.4 & 46.2 / 30.0 & 38.0 / 25.0 & 39.2 / 25.2 & 43.2 / 28.8 \\ 
+        vi & 64.5 / 44.8 & 53.9 / 37.5 & 53.7 / 36.6 & 32.5 / 19.3 & 35.1 / 19.7 & 58.8 / 39.6 & 50.3 / 32.3 & 49.8 / 32.8 \\ 
+        zh & 38.3 / 37.7 & 29.0 / 28.3 & 30.0 / 28.9 & 21.0 / 20.6 & 16.6 / 16.2 & 25.1 / 24.4 & 37.4 / 36.8 & 28.2 / 27.6 \\ \midrule
+        avg & 59.5 / 44.8 & 51.5 / 37.3 & 52.0 / 38.0 & 36.7 / 24.3 & 34.0 / 21.6 & 43.4 / 29.9 & 45.1 / 31.2 & 46.0 / 32.4 \\ \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+    \caption{MLQA results (F1/EM) for each language in zero-shot with mBERT. Columns show question language, rows show context language.}
+    \label{MLQA_results_ZS_mBERT}
+\end{table*}
+
+
+
+xlm-r
+
+\begin{table*}[!ht]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{l|ccccccc|c}
+    \toprule
+        c/q & en & es & de & ar & hi & vi & zh & avg \\ \midrule
+        en & 80.8 / 68.0 & 57.8 / 43.9 & 60.8 / 47.1 & 33.5 / 21.3 & 45.0 / 32.0 & 39.8 / 27.5 & 37.9 / 25.3 & 50.8 / 37.9 \\ 
+        es & 66.0 / 45.1 & 66.5 / 46.1 & 50.5 / 32.6 & 25.2 / 12.3 & 31.8 / 17.1 & 29.1 / 14.9 & 28.2 / 14.3 & 42.5 / 26.1 \\ 
+        de & 60.0 / 44.3 & 44.0 / 29.7 & 62.2 / 46.7 & 22.2 / 12.1 & 29.4 / 17.6 & 28.7 / 16.2 & 29.1 / 17.2 & 39.4 / 26.3 \\ 
+        ar & 51.5 / 33.8 & 27.0 / 13.5 & 34.2 / 19.8 & 54.6 / 36.0 & 15.6 / 5.8 & 15.0 / 5.7 & 14.1 / 5.1 & 30.3 / 17.1 \\ 
+        hi & 60.6 / 43.4 & 37.4 / 23.0 & 42.8 / 27.8 & 19.5 / 8.0 & 61.4 / 44.2 & 24.3 / 11.9 & 26.1 / 13.6 & 38.9 / 24.6 \\ 
+        vi & 63.6 / 44.6 & 32.6 / 19.1 & 41.9 / 25.7 & 17.8 / 6.6 & 29.2 / 15.0 & 67.2 / 46.3 & 27.4 / 13.8 & 40.0 / 24.4 \\ 
+        zh & 34.9 / 34.3 & 11.3 / 10.7 & 14.0 / 13.3 & 3.9 / 3.7 & 10.8 / 10.4 & 8.1 / 7.7 & 40.0 / 39.3 & 17.6 / 17.1 \\ \midrule
+        avg & 59.6 / 44.8 & 39.5 / 26.6 & 43.8 / 30.4 & 25.2 / 14.3 & 31.9 / 20.3 & 30.3 / 18.6 & 29.0 / 18.4 & 37.0 / 24.8 \\ \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+    \caption{MLQA results (F1/EM) for each language in zero-shot with XLM-R. Columns show question language, rows show context language.}
+    \label{MLQA_results_ZS_XLM-R}
+\end{table*}
+
+
+
+xlm-r-large
+
+
+\begin{table*}[!ht]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{l|ccccccc|c}
+    \toprule
+        c/q & en & es & de & ar & hi & vi & zh & avg \\ \midrule
+        en & 84.0 / 71.2 & 77.2 / 64.2 & 77.7 / 65.1 & 32.4 / 22.1 & 43.6 / 30.7 & 61.6 / 48.5 & 33.8 / 21.1 & 58.6 / 46.1 \\ 
+        es & 72.1 / 50.3 & 72.1 / 50.2 & 70.0 / 48.6 & 33.0 / 17.8 & 42.1 / 26.1 & 54.8 / 35.6 & 36.5 / 20.5 & 54.4 / 35.6 \\ 
+        de & 67.7 / 51.7 & 65.3 / 49.6 & 68.5 / 52.4 & 31.2 / 19.5 & 36.2 / 21.9 & 50.7 / 34.3 & 32.3 / 18.9 & 50.3 / 35.5 \\ 
+        ar & 61.7 / 42.2 & 56.7 / 38.4 & 59.7 / 41.8 & 62.0 / 42.1 & 43.9 / 27.4 & 48.6 / 30.7 & 38.7 / 21.6 & 53.0 / 34.9 \\ 
+        hi & 70.5 / 52.6 & 63.2 / 45.9 & 65.1 / 49.9 & 45.5 / 29.1 & 69.8 / 51.3 & 54.4 / 37.6 & 44.6 / 28.5 & 59.0 / 42.1 \\ 
+        vi & 72.1 / 50.9 & 64.7 / 45.5 & 67.7 / 48.2 & 35.8 / 20.9 & 42.0 / 25.3 & 73.1 / 51.8 & 39.2 / 21.7 & 56.4 / 37.8 \\ 
+        zh & 44.2 / 43.6 & 36.7 / 36.1 & 41.1 / 40.2 & 25.9 / 25.4 & 30.0 / 29.5 & 35.0 / 34.6 & 45.7 / 45.1 & 36.9 / 36.4 \\ \midrule
+        avg & 67.5 / 51.8 & 62.3 / 47.1 & 64.3 / 49.5 & 38.0 / 25.3 & 43.9 / 30.3 & 54.0 / 39.0 & 38.7 / 25.3 & 52.7 / 38.3 \\ \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+    \caption{MLQA results (F1/EM) for each language in zero-shot with XLM-R-Large. Columns show question language, rows show context language.}
+    \label{MLQA_results_ZS_XLM-R-Large}
+\end{table*}
+
+
+
+
+
+\subsection{TyDiQA}
 
 \section{Conclusions}
 
