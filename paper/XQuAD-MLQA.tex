@@ -67,7 +67,7 @@
 
 \section{Introduction}
 
-In this project we performed some zero-shot and translation experiments on Multilingual Question Answering. The objective is to compare the results of zero shot, translation test and translation test on different datasets, with different models. The datasets we used are XQuAD, MLQA and TyDiQA, and the models are monolingual or multilingual:
+In this project we performed some zero-shot and translation experiments on Multilingual Question Answering. The objective is to compare the results of zero shot, translate-train and translate-test on different datasets, with different models. The datasets we used are XQuAD, MLQA and TyDiQA, and the models are monolingual or multilingual:
 
 \begin{itemize}
     \item Monolingual models: 
@@ -89,46 +89,213 @@ Most of the models we used are already fine-tuned and available on Huggingface.
 
 \section{Related Work}
 
-\section{Data}
+\section{Datasets}
 
 \subsection{XQuAD}
 
-XQuAD is a multilingual Question Answering dataset \cite{Artetxe:etal:2019}. It is composed of 240 paraghaps and 1190 question-answer pair from SQuAD v1.1\footnote{\url{https://huggingface.co/datasets/squad}}. SQuAD is based on a set of Wikipedia articles. Professional translations into 11 languages were added in XQuAD (Spanish, German, Greek, Russian, Turkish, Arabic, Vietnamese, Thai, Chinese, Hindi and Romanian). As the dataset is based on SQuAD v1.1, there are no unanswerable questions in the data. 
+XQuAD is a multilingual Question Answering dataset \cite{Artetxe:etal:2019}. It is composed of 240 paraghaps and 1190 question-answer pair from SQuAD v1.1\footnote{\url{https://huggingface.co/datasets/squad}}. SQuAD is based on a set of Wikipedia articles in English. Professional translations into 11 languages were added in XQuAD (Spanish, German, Greek, Russian, Turkish, Arabic, Vietnamese, Thai, Chinese, Hindi and Romanian). As the dataset is based on SQuAD v1.1, there are no unanswerable questions in the data. 
 
-We also used XTREME \cite{XTREME} for automatically translated translate-train and translate-test data. The dataset can be found in HuggingFace \footnote{\url{https://huggingface.co/datasets/juletxara/xquad_xtreme}}.
+We also added automatic translation from XTREME \cite{XTREME} for translate-train and translate-test experiments. The combined dataset can be found in HuggingFace \footnote{\url{https://huggingface.co/datasets/juletxara/xquad_xtreme}}.
 
 \subsection{MLQA}
 
 MLQA \cite{lewis2019mlqa} is another multilingual question answering evaluation benchmark. It has 5K extractive question-answering instances (12K in English) in seven languages (English, Arabic, German, Spanish, Hindi, Vietnamese and Simplified Chinese). It is also based on Wikipedia articles, and the questions has been translated by professional translators, while he answers are directly taken form the different languages of the given Wikipedia article, to get parallel sentences.
 
-We also used XTREME \cite{XTREME} for automatically translated translate-train and translate-test data. The dataset can be found in HuggingFace \footnote{\url{https://huggingface.co/datasets/mlqa}}.
+We also added automatic translation from XTREME \cite{XTREME} for translate-train and translate-test experiments. The combined can be found in HuggingFace \footnote{\url{https://huggingface.co/datasets/mlqa}}.
 
 \subsection{TyDiQA}
 
 TyDi QA is a question answering dataset covering 11 typologically diverse languages with 204K question-answer pairs \cite{tydiqa}. The languages of TyDi QA are diverse with regard to their typology -- the set of linguistic features that each language expresses -- such that we expect models performing well on this set to generalize across a large number of the languages in the world. It contains language phenomena that would not be found in English-only corpora. To provide a realistic information-seeking task and avoid priming effects, questions are written by people who want to know the answer, but don’t know the answer yet, (unlike SQuAD and its descendents) and the data is collected directly in each language without the use of translation (unlike MLQA and XQuAD).
 
-We also used XTREME \cite{XTREME} for automatically translated translate-train and translate-test data. The dataset can be found in HuggingFace \footnote{\url{https://huggingface.co/datasets/juletxara/tydiqa_xtreme}}.
+We also added automatic translation from XTREME \cite{XTREME} for translate-train and translate-test experiments. The combined can be found in HuggingFace \footnote{\url{https://huggingface.co/datasets/juletxara/tydiqa_xtreme}}.
 
-\section{Methods}
+\section{Models}
 
-All the code can be found on GitHub \footnote{\url{https://github.com/juletx/XQuAD-MLQA}}
+To make experiments, we have used four monolingual models and three multilingual models:
+
+\begin{itemize}
+    \item Monolingual models: 
+    \begin{enumerate}
+        \item BERT \cite{BERT}: It is a pretrained model on raw text in English. It has been pretrained with masked language modeling and next sentence prediction objectives to learn an inner representation of the English language. It has 12 layers, the size of the hidden layers is 768, it has 12 self-attention heads and 110M parameters.
+        \item BERT-large: It is the large version of BERT and has been pre-trained the same way. It has 24 layers, the size of the hidden layers is 1024, it has 12 self-attention heads and 340M parameters
+        \item RoBERTa \cite{ROBERTA}: As the previous models, it has been pretrained on raw English data. It has been trained with dynamic masking, full-sentences without NSP loss, large mini-batches and a larger byte-level BPE. It has 12 layer of hidden size 768 and 12 attention heads.
+        \item RoBERTa-large: It is the large version of RoBERTa. It has 24 layers of hidden size 1024 and 16 attention heads.
+    \end{enumerate}
+    \item Multilingual models
+    \begin{enumerate}
+        \item mBERT (110M): It has been trained the same way than BERT but using Wikipedia articles in 102 languages.
+        \item XLM-R \cite{XLM-R}: It is a model pre-trained on 2.5TB of filtered CommonCrawl data containing 100 languages.
+        \item XLM-R-large: It is the large version of XLM-R.
+    \end{enumerate}
+\end{itemize}
+
+\section{Experiments}
+
+All the code can be found on GitHub \footnote{\url{https://github.com/juletx/XQuAD-MLQA}}.
 
 \subsection{Zero-shot}
 
+We fine-tune the multilingual models on SQuAD, and evaluate them on the XQuAD, MLQA and TiDyQA test data for other languages. This is known as cross-lingual zero-shot transfer (XLT).
 
-\subsection{Translate Train}
+For MLQA, we also evaluate models on generalised cross-lingual zero-shot transfer (G-XLT). In this setting, different languages are used for context and question.
 
-\subsection{Translate Test Monolingual}
+\subsection{Translate-train}
 
-\subsection{Translate Test Multilingual}
+We fine-tune multilingual models on translated SQuAD, and evaluate them on XQuAD, MLQA and TiDyQA test data.
 
-\subsection{Fine tuning}
+\subsection{Translate-test Monolingual}
+
+We fine-tune the monolingual models on SQuAD, and evaluate them on translated XQuAD, MLQA and TiDyQA test data.
+
+\subsection{Translate-test Multilingual}
+
+We fine-tune the multilingual models on SQuAD, and evaluate them on translated XQuAD, MLQA and TiDyQA test data.
+
+\subsection{Fine-tuning}
+
+For XQuAD dataset, we fine-tune multilingual models on XQuAD and evaluate them on XQuAD test data. As we used already fine-tuned models, we know that the fine-tuning has been done with a part of the test data, but we don't know which one, so the results will be very high, as shown in section \ref{sec:XQuAD_res}.
+
+For TiDyQA, the multilingual models are fine-tuned on TiDyQA, and evaluated on TiDyQA test set.
+
 
 \subsection{Data augmentation}
+
+In XQuAD, we fine tune multilingual models on augmented XQuAD, and evaluate them on XQuAD test data. In this case also, we have the same issue than in the previous one, because we don't know in which part of the test data the fine-tuning has been done.
+
+For TiDyQA, we use an model that has been trained on augmented XQuAD dataset and then fine-tuned on TyDiQA, and evaluate it on TyDiQA test set.
+
+
+
+\section{Baselines}
+
+\subsection{XQuAD}
+
+In Table \ref{Baseline_results_XQuAD}, we can see the baseline results, zero shot results are found by directly fine-tuning mBERT and XLM-R Large in the English SQuAD v1.1 training data and evaluating them on XQuAD test dataset. For translate-train, the models are fine-tuned on translated SQuAD, and for translate-test, BERT Large was fine-tuned on SQuAD training set and evaluated on translated XQuAD.
+
+We can see that the best results are obtained by zero-shot with XLM-Large, and Translate train using BERT Large.
+
+\begin{table*}[!ht]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{l|cccccccccccc|c}
+    \toprule
+        Model & en & ar & de & el & es & hi & ru & th & tr & vi & zh & ro & avg \\ \midrule
+        \multicolumn{14}{l}{Zero-shot} \\ \midrule
+        mBERT & 83.5 / 72.2 & 61.5 / 45.1 & 70.6 / 54.0 & 62.6 / 44.9 & 75.5 / 56.9 & 59.2 / 46.0 & 71.3 / 53.3 & 42.7 / 33.5 & 55.4 / 40.1 & 69.5 / 49.6 & 58.0 / 48.3 & 72.7 / 59.9 & 65.2 / 50.3 \\ 
+        XLM-R Large & 86.5 / 75.7 & 68.6 / 49.0 & \textbf{80.4} / 63.4 & \textbf{79.8} / 61.7 & 82.0 / 63.9 & \textbf{76.7} / 59.7 & \textbf{80.1} / 64.3 & \textbf{74.2} / \textbf{62.8} & \textbf{75.9} / \textbf{59.3} & \textbf{79.1} / 59.0 & 59.3 / 50.0 & \textbf{83.6} / \textbf{69.7} & \textbf{77.2}/ 61.5 \\ \midrule
+        \multicolumn{14}{l}{Translate-train} \\ \midrule
+        mBERT & 83.5 / 72.2 & 68.0 / 51.1 & 75.6 / 60.7 & 70.0 / 53.0 & 80.2 / 63.1 & 69.6 / 55.4 & 75.0 / 59.7 & 36.9 / 33.5 & 68.9 / 54.8 & 75.6 / 56.2 & 66.2 / 56.6 & ~ & 70.0 / 56.0 \\ \midrule
+        \multicolumn{14}{l}{Translate-test} \\ \midrule
+        BERT Large & \textbf{87.9} / \textbf{77.1} & \textbf{73.7} / \textbf{58.8} & 79.8 / \textbf{66.7} & 79.4 / \textbf{65.5} & \textbf{82.0} / \textbf{68.4} & 74.9 / \textbf{60.1} & 79.9 / \textbf{66.7} & 64.6 / 50.0 & 67.4 / 49.6 & 76.3 / \textbf{61.5} & \textbf{73.7} / \textbf{59.1} & ~ & 76.3 / \textbf{62.1} \\ 
+        \hline
+    \end{tabular}
+    \end{adjustbox}
+    \caption{Baseline results (F1/EM) for each language in XQuAD dataset.}
+    \label{Baseline_results_XQuAD}
+\end{table*}
+
+
+\subsection{MLQA XLT}
+
+The baselines results for MLQA dataset are shown in Table \ref{Baseline_results_MLQA}. XLM performs best overall, transferring best in Spanish, German and Arabic, and competitively with translate-train with mBERT for Vietnamese and Chinese. However, XLM is weaker in English. There is a 39.8\% drop in mean EM score (20.9\% F1) over the English BERT-large baseline,
+showing significant room for improvement. All models generally struggle on Arabic and Hindi.
+
+\begin{table*}[!ht]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{l|ccccccc|c}
+    \toprule
+        Model & en & es & de & ar & hi & vi & zh & avg \\ \midrule
+        \multicolumn{9}{l}{Zero-shot} \\ \midrule
+        BERT-Large & \textbf{80.2} / \textbf{67.4} & ~ & ~ & ~ & ~ & ~ & ~ & 80.2 / 67.4 \\ 
+        mBERT & 77.7 / 65.2 & 64.3 / 46.6 & 57.9 / 44.3 & 45.7 / 29.8 & 43.8 / 29.7 & 57.1 / 38.6 & 57.5 / 37.3 & 57.7 / 41.6 \\ 
+        XLM & 74.9 / 62.4 & \textbf{68.0} / \textbf{49.8} & \textbf{62.2} / \textbf{47.6} & \textbf{54.8} / \textbf{36.3} & 48.8 / 27.3 & 61.4 / 41.8 & 61.1 / \textbf{39.6} & 61.1 / 43.5 \\ \midrule
+        \multicolumn{9}{l}{Translate-train} \\ \midrule
+        mBERT & ~ & 53.9 / 37.4 & 62.0 / 47.5 & 51.8 / 33.2 & \textbf{55.0} / \textbf{40.0} & \textbf{62.0} / \textbf{43.1} & \textbf{61.4} / 39.5 & 47.2 / 29.7\\
+        XLM & ~ & 65.2 / 47.8 & 61.4 / 46.7 & 54.0 / 34.4 & 50.7 / 33.4 & 59.3 / 39.4 & 59.8 / 37.9 & 57.7 / 40.1 \\ \midrule
+        \multicolumn{9}{l}{Translate-test} \\ \midrule
+        BERT-Large & ~ & 65.4 / 44.0 & 57.9 / 41.8 & 33.6 / 20.4 & 23.8 / 18.9 & 58.2 / 33.2 & 44.2 / 20.3 & 58.4 / 39.9 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+    \caption{Baseline results (F1/EM) for each language in MLQA dataset.}
+    \label{Baseline_results_MLQA}
+\end{table*}
+
+\subsection{MLQA G-XLT}
+
+Table \ref{tab:mlqa_zero-shot_baseline_xlm} shows results for XLM on G-XLT. For questions in a given language, the model performs best when the context language matches the question, except for Hindi and Arabic. For contexts in a given language, English questions tend to
+perform best, apart from Chinese and Vietnamese.
+
+\begin{table}[ht]
+\centering
+\begin{adjustbox}{max width=\columnwidth}
+\begin{tabular}{l|ccccccc}
+\toprule
+c/q & en   & es   & de   & ar   & hi   & vi   & zh   \\ \midrule
+en  & 74.9 & 65.0 & 58.5 & 50.8 & 43.6 & 55.7 & 53.9 \\
+es  & 69.5 & 68.0 & 61.7 & 54.0 & 49.5 & 58.1 & 56.5 \\
+de  & 70.6 & 67.7 & 62.2 & 57.4 & 49.9 & 60.1 & 57.3 \\
+ar  & 60.0 & 57.8 & 54.9 & 54.8 & 42.4 & 50.5 & 43.5 \\
+hi  & 59.6 & 56.3 & 50.5 & 44.4 & 48.8 & 48.9 & 40.2 \\
+vi  & 60.2 & 59.6 & 53.2 & 48.7 & 40.5 & 61.4 & 48.5 \\
+zh  & 52.9 & 55.8 & 50.0 & 40.9 & 35.4 & 46.5 & 61.1 \\ \bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption{Baseline MLQA F1 results on G-XLT with XLM. Columns show question language, rows show context language.}
+\label{tab:mlqa_zero-shot_baseline_xlm}
+\end{table}
+
+Table \ref{tab:mlqa_zero-shot_baseline_mbert} shows results for mBERT on on G-XLT. XLM outperforms mBERT for most language pairs, with a mean G-XLT performance of 53.4 F1 compared to 47.2 F1 (mean of off-diagonal elements). Multilingual BERT exhibits more of a preference for English than XLM for G-XLT. It also has a bigger performance drop going from XLT to G-XLT (10.5 mean drop in F1 compared to 8.2).
+
+\begin{table}[ht]
+\centering
+\begin{adjustbox}{max width=\columnwidth}
+\begin{tabular}{l|ccccccc}
+\toprule
+c/q & en   & es   & de   & ar   & hi   & vi   & zh   \\ \midrule
+en  & 77.7 & 64.4 & 62.7 & 45.7 & 40.1 & 52.2 & 54.2 \\
+es  & 67.4 & 64.3 & 58.5 & 44.1 & 38.1 & 48.2 & 51.1 \\
+de  & 62.8 & 57.4 & 57.9 & 38.8 & 35.5 & 44.7 & 46.3 \\
+ar  & 51.2 & 45.3 & 46.4 & 45.6 & 32.1 & 37.3 & 40.0 \\
+hi  & 51.8 & 43.2 & 46.2 & 36.9 & 43.8 & 38.4 & 40.5 \\
+vi  & 61.4 & 52.1 & 51.4 & 34.4 & 35.1 & 57.1 & 47.1 \\
+zh  & 58.0 & 49.1 & 49.6 & 40.5 & 36.0 & 44.6 & 57.5 \\ \bottomrule
+\end{tabular}
+\end{adjustbox}
+\caption{Baseline MLQA F1 results on G-XLT with mBERT. Columns show question language, rows show context language.}
+\label{tab:mlqa_zero-shot_baseline_mbert}
+\end{table}
+
+\subsection{TyDiQA GoldP}
+
+% hemen emaitzak aldau ber die, behetik kopiau det
+
+\begin{table}[!ht]
+    \centering
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{l|ccccccccc|c}
+        \toprule
+        Model & en & ar & bn & fi & id & ko & ru & sw & te & avg \\
+        \midrule
+        \multicolumn{11}{l}{Zero-shot} \\
+        \midrule
+        mBERT & 73.4 & 60.3 & 57.3 & 56.2 & 60.8 & 52.9 & 50.0 & 64.4 & 49.3 & 56.4  \\ \midrule
+        \multicolumn{11}{l}{Fine-tuning} \\
+        \midrule
+        mBERT & 76.8 & 81.7 & 75.4 & 79.4 & 84.8 & 81.9 & 69.2 & 76.2 & 83.3 & 79.0  \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+    \centering
+    \caption{Baseline TyDiQA GoldP F1 results for each language.}
+    \label{TyDiQA_baseline_results}
+\end{table}
 
 \section{Results}
 
 \subsection{XQuAD}
+\label{sec:XQuAD_res}
 
 The results are obtained with XQuAD dataset are in Table \ref{XQuAD_results}. They are quite similar to those form the baseline and these are some conclusions we got.
 
@@ -143,7 +310,7 @@ The best languages have been English, Spanish, Romanian and Russian and the wors
     \begin{adjustbox}{max width=\textwidth}
     \begin{tabular}{l|cccccccccccc|c}
         \toprule
-        Model F1 / EM & en & ar & de & el & es & hi & ru & th & tr & vi & zh & ro & avg \\
+        Model & en & ar & de & el & es & hi & ru & th & tr & vi & zh & ro & avg \\
         \midrule
         \multicolumn{14}{l}{Zero-shot} \\
         \midrule
@@ -186,7 +353,7 @@ The best languages have been English, Spanish, Romanian and Russian and the wors
     \label{XQuAD_results}
 \end{table*}
 
-\subsection{MLQA}
+\subsection{MLQA XLT}
 
 In the MLQA dataset also, we get higher results with the biggest models, as we can see in Table \ref{MLQA_results}. The language that obtains the best score is English. It is not unexpected because the dataset has much more data in English than in the other languages.
 Comparing to the results we got with XQuAD dataset, the results are generally a little lower, but we get the best results with the same models: XLM-R Large for zero-shot and multilingual translate test, RoBERTa Large and BERT Large for monolingual translate test, and balanced between Spanish and German in translate train.
@@ -196,7 +363,7 @@ Comparing to the results we got with XQuAD dataset, the results are generally a 
     \begin{adjustbox}{max width=\textwidth}
     \begin{tabular}{l|ccccccc|c}
         \toprule
-        Model F1 / EM & en & es & de & ar & hi & vi & zh & avg \\
+        Model & en & es & de & ar & hi & vi & zh & avg \\
         \midrule
         \multicolumn{9}{l}{Zero-shot} \\
         \midrule
@@ -229,11 +396,9 @@ Comparing to the results we got with XQuAD dataset, the results are generally a 
     \label{MLQA_results}
 \end{table*}
 
-\subsection{MLQA Zero-Shot}
+\subsection{MLQA G-XLT}
 
 We made zero-shot experiments between all the seven languages of the MLQA dataset and here are the results we got with the three models we used.
-
-\subsubsection{mBERT}
 
 Using mBERT, in Table \ref{MLQA_results_ZS_mBERT} we see that no matter the language of the corpus, making the question in English always gives the best score. This is probably because the dataset is trained with more data in English than the other languages. In the cases of Spanish, German, Vietnamese and Chinese, the second best score corresponds to the case where the question is asked in the language itself, but for Arabic and Hindi, we get better results when the question language is Spanish or German, instead of Arabic or Hindi.
 
@@ -257,12 +422,9 @@ Using mBERT, in Table \ref{MLQA_results_ZS_mBERT} we see that no matter the lang
     \label{MLQA_results_ZS_mBERT}
 \end{table*}
 
-
-\subsubsection{XLM-R}
-
 Using XLM-R, we see in Table \ref{MLQA_results_ZS_XLM-R} that the best scores are always those that have the same question and context language. 
 
-\begin{table*}[!ht]
+\begin{table*}[ht]
     \centering
     \begin{adjustbox}{max width=\textwidth}
     \begin{tabular}{l|ccccccc|c}
@@ -283,11 +445,9 @@ Using XLM-R, we see in Table \ref{MLQA_results_ZS_XLM-R} that the best scores ar
 \end{table*}
 
 
-\subsubsection{XLM-R Large}
-
 As we can see in Table \ref{MLQA_results_ZS_XLM-R-Large}, here also in most of the cases the best scores are when the question and the context are in the same language, even if the English scores are very close, and in some cases EM is better in English.
 
-\begin{table*}[!ht]
+\begin{table*}[ht]
     \centering
     \begin{adjustbox}{max width=\textwidth}
     \begin{tabular}{l|ccccccc|c}
@@ -309,7 +469,7 @@ As we can see in Table \ref{MLQA_results_ZS_XLM-R-Large}, here also in most of t
 
 
 
-\subsection{TyDiQA}
+\subsection{TyDiQA GoldP}
 
 In Table \ref{TyDiQA_results}, we can see the results we get with TyDiQA dataset. As in the previous datasets, for zero-shot, the best results are obtained with the larger model, XLM-R large, for every language. For monolingual translate test, a large model also get the best scores, but it is BERT Large instead of RoBERTa Large. For multilingual translate test, XLM-R Large get almost every best results except for Korean en Finnish EM, where mBERT performs better. And for translate train, the results are here also balanced between Spanish and German. For fine-tuning and data augmentation, we get better results than in the rest of the experiments with this dataset, but a little lower than with XQuAD. Taking the case of Arabic, that appears both in MLQA and TyDiQA, we get better results with TyDiQA in every experiment.
 
@@ -318,7 +478,7 @@ In Table \ref{TyDiQA_results}, we can see the results we get with TyDiQA dataset
     \begin{adjustbox}{max width=\textwidth}
     \begin{tabular}{l|ccccccccc|c}
         \toprule
-        Model F1 / EM & en & ar & bn & fi & id & ko & ru & sw & te & avg \\
+        Model & en & ar & bn & fi & id & ko & ru & sw & te & avg \\
         \midrule
         \multicolumn{11}{l}{Zero-shot} \\
         \midrule
@@ -355,7 +515,7 @@ In Table \ref{TyDiQA_results}, we can see the results we get with TyDiQA dataset
     \end{tabular}
     \end{adjustbox}
     \centering
-    \caption{TyDiQA results (F1/EM) for each language.}
+    \caption{TyDiQA GoldP results (F1/EM) for each language.}
     \label{TyDiQA_results}
 \end{table*}
 
