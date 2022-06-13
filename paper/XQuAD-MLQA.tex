@@ -63,6 +63,10 @@
 \begin{document}
 \maketitle
 \begin{abstract}
+
+Question answering is a popular task in NLP, that consist in finding the answer of a given question taking a passage of text. There are a lot of models trained to this task on different datasets and languages. In this work, we propose some zero-shot and translation experiments to evaluate these models in three of these datasets (XQuAD, MLQA and TyDiQA). We report the results and make some analysis to see which are the models, languages and experiments that give better results. We see that for low-level resource languages, it is difficult to reach as high results as those we get for the high-level resource ones, because of the lack of data.
+
+
 \end{abstract}
 
 \section{Introduction}
@@ -122,14 +126,14 @@ Multilingual models include the multilingual versions of the previous models, mB
 
 \section{Experiments}
 
-We perform 6 experiments in total with the models in the previous section. These experiments include zero-shot, translate-test, translate-train, fine-tuning and data-augmentation. The models we use are already fine-tuned and available on Huggingface. This way we save training time and we can do more experiments. All the code to replicate the experiments can be found on GitHub \footnote{\url{https://github.com/juletx/XQuAD-MLQA}}.
+We perform 6 experiments in total with the models in the previous section. These experiments include zero-shot, translate-test, translate-train, fine-tuning and data-augmentation. The models we use are already fine-tuned and available on Huggingface. This way we save training time and we can do more experiments. All the code to replicate the experiments can be found on GitHub \footnote{\url{https://github.com/juletx/multilingual-question-answering}}.
 
 \begin{enumerate}
     \item \textbf{Zero-shot}: We fine-tune the multilingual models on SQuAD, and evaluate them on the XQuAD, MLQA and TiDyQA test data for other languages. This is known as cross-lingual zero-shot transfer (XLT). For MLQA, we also evaluate models on generalised cross-lingual zero-shot transfer (G-XLT). In this setting, different languages are used for context and question.
     
-    \item \textbf{Translate-test Monolingual}: We fine-tune the monolingual models on SQuAD, and evaluate them on translated XQuAD, MLQA and TiDyQA test data.
+    \item \textbf{Translate-test monolingual}: We fine-tune the monolingual models on SQuAD, and evaluate them on translated XQuAD, MLQA and TiDyQA test data.
     
-    \item \textbf{Translate-test Multilingual}: We fine-tune the multilingual models on SQuAD, and evaluate them on translated XQuAD, MLQA and TiDyQA test data.
+    \item \textbf{Translate-test multilingual}: We fine-tune the multilingual models on SQuAD, and evaluate them on translated XQuAD, MLQA and TiDyQA test data.
     
     \item \textbf{Translate-train}: We fine-tune multilingual models on translated SQuAD, and evaluate them on XQuAD, MLQA and TiDyQA test data.
     
@@ -454,7 +458,7 @@ As we can see in Table \ref{MLQA_results_ZS_XLM-R-Large}, here also in most of t
 
 \subsection{TyDiQA GoldP}
 
-In Table \ref{TyDiQA_results}, we can see the results we get with TyDiQA dataset. As in the previous datasets, for zero-shot, the best results are obtained with the larger model, XLM-R large, for every language. For monolingual translate test, a large model also get the best scores, but it is BERT Large instead of RoBERTa Large. For multilingual translate test, XLM-R Large get almost every best results except for Korean en Finnish EM, where mBERT performs better. And for translate train, the results are here also balanced between Spanish and German. For fine-tuning and data augmentation, we get better results than in the rest of the experiments with this dataset, but a little lower than with XQuAD. Taking the case of Arabic, that appears both in MLQA and TyDiQA, we get better results with TyDiQA in every experiment.
+In Table \ref{TyDiQA_results}, we can see the results we get with TyDiQA dataset. As in the previous datasets, for zero-shot, the best results are obtained with the larger model, XLM-R large, for every language. For monolingual translate test, a large model also get the best scores, but it is BERT Large instead of RoBERTa Large. For multilingual translate test, XLM-R Large get almost every best results except for Korean en Finnish EM, where mBERT performs better. And for translate train, the results are here also balanced between Spanish and German.  Fine-tuning improves the results in most of the languages of the dataset. And for data augmentation, we get better results than in the rest of the experiments with this dataset, but a little lower than with XQuAD. Taking the case of Arabic, that appears both in MLQA and TyDiQA, we get better results with TyDiQA in every experiment.
 
 \begin{table*}[!ht]
     \centering
@@ -504,6 +508,12 @@ In Table \ref{TyDiQA_results}, we can see the results we get with TyDiQA dataset
 
 
 \section{Conclusions}
+
+Using three different multilingual question answering datasets, and making some experiments with different datasets and models, we saw that overall, the models that work better in both zero-shot and translation experiments (translate test monolingual, multilingual and translate train) are the biggest ones. But for some languages there is a gap in the results depending on the model we use, even if the model is multilingual. We saw that comparing the scores of the different languages of the datasets, most often the best results are obtained by English no matter the model we use and the experiment in which we are. This is because it is the language that has the most resources and biggest clean datasets.
+
+As expected, fine-tuning give better results in some cases and data augmentation improves the results in most of the tries, even if it is not the case with all the languages.
+
+
 
 \bibliography{XQuAD-MLQA}
 \bibliographystyle{acl_natbib}
